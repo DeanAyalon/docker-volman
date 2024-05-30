@@ -1,0 +1,7 @@
+services:
+  manager:
+    image: alpine
+    container_name: volume-manager
+    hostname: volume-manager
+    command: tail -f /dev/null
+    
