@@ -1,2 +1,5 @@
 # Dynamic compose file
 compose.yml
+
+# Environment files
+*.env
