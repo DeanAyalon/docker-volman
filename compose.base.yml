@@ -1,7 +1,7 @@
 services:
   manager:
-    image: alpine
-    container_name: volume-manager
-    hostname: volume-manager
+    image: ${IMAGE:-alpine}
+    container_name: volman
+    hostname: volman
     command: tail -f /dev/null
     

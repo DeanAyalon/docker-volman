@@ -3,3 +3,4 @@ compose.yml
 
 # Environment files
 *.env
+!template.env

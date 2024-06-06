@@ -7,6 +7,7 @@ I may in the future customize this some more to allow:
 - Permission management
 - Some sort of GUI
 - Other volume tweaks and scripts
+- Dynamic volume assignment ([docker-gen](https://github.com/nginx-proxy/docker-gen)?)
 
 But currently, this suits me just fine, all I need is to access the files within all my volumes
 
