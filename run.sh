@@ -31,3 +31,8 @@ echo Generated compose file
 
 # Compose container
 docker compose up -d 
+
+# Enter volume management and list available volumes
+echo Available volumes:
+docker exec -itu0 -w /volumes volman ls
+docker exec -itu0 -w /volumes volman /bin/bash

@@ -1,6 +1,14 @@
 # Purpose
 This repository was made to generate a dynamic container with all the existing named volumes as mounts - To allow for easy data management.
 
+# Requirements
+- Docker
+- Docker Compose
+
+# Use
+## Run
+Simply use the `run.sh` script, it will generate a compose file based on the existing volumes, create the container, and enter into the volumes directory.
+
 # Future
 I may in the future customize this some more to allow:
 - Volume selection 
