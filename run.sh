@@ -9,6 +9,10 @@ volumes=$(docker_volumes)
 # Execution context
 cd "$(dirname "$0")"
 
+# Environment
+source .env
+[ -z $IMAGE_SHELL ] && IMAGE_SHELL=sh
+
 # Generate compose file
 cp compose.base.yml compose.yml
 
@@ -35,4 +39,4 @@ docker compose up -d
 # Enter volume management and list available volumes
 echo Available volumes:
 docker exec -itu0 -w /volumes volman ls
-docker exec -itu0 -w /volumes volman /bin/bash
+docker exec -itu0 -w /volumes volman /bin/$IMAGE_SHELL
