@@ -8,8 +8,15 @@ volumes=$(docker_volumes)
 
 # Execution context
 cd "$(dirname "$0")"
+workdir=$(pwd)
 
 # Environment
+
+if [ ! -f .env ]; then
+    cp template.env .env
+    echo Edit this file to configure Docker Volman:
+    echo "  $workdir/.env"
+fi
 source .env
 [ -z $IMAGE_SHELL ] && IMAGE_SHELL=sh
 
@@ -37,6 +44,8 @@ echo Generated compose file
 docker compose up -d 
 
 # Enter volume management and list available volumes
+echo
+echo "Entering volman - to exit, type 'exit'"
 echo Available volumes:
 docker exec -itu0 -w /volumes volman ls
 docker exec -itu0 -w /volumes volman /bin/$IMAGE_SHELL
