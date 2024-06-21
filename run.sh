@@ -10,10 +10,15 @@ help() {
     echo Use: $0 [options]
     echo Options:
     # echo "  -b      Add bind mount"
-    echo "  -d      Remove Volman (Compose down)"
-    echo "  -D      Forcefully remove Volman (rm -f)"
+    echo "  -d      Stop Volman (Compose down)"
+    echo "  -D      Forcefully stop Volman (rm -f)"
     echo "  -h      Show this Help dialog"
     echo "  -k      Keep Volman running after exit"
+}
+
+force_down() {
+    docker rm -f volman
+    docker network rm volman_default
 }
 
 # GET ALL DOCKER VOLUME NAMES -> $volumes
@@ -77,7 +82,7 @@ cp compose.base.yml compose.yml
 # Compose down
 if [ ! -z $down ]; then
     if [ "$down" = force ]; then
-        docker rm -f volman
+        force_down
     else
         docker compose down
     fi
@@ -113,5 +118,5 @@ docker exec -itu0 -w /volumes volman ls
 docker exec -itu0 -w /volumes volman /bin/$IMAGE_SHELL
 
 # Exit volman
-# [ -z $keep ] && docker rm -f volman           # Fast
-[ -z $keep ] && docker compose down           # Safer
+[ -z $keep ] && force_down           # Fast
+# [ -z $keep ] && docker compose down           # Safer
