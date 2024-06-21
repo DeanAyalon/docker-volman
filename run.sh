@@ -118,5 +118,4 @@ docker exec -itu0 -w /volumes volman ls
 docker exec -itu0 -w /volumes volman /bin/$IMAGE_SHELL
 
 # Exit volman
-[ -z $keep ] && force_down           # Fast
-# [ -z $keep ] && docker compose down           # Safer
+[ -z $keep ] && docker compose down
