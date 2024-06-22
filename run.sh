@@ -7,7 +7,7 @@ volmandir=$(pwd)
 
 # Help dialog
 help() {
-    echo Use: $0 [options]
+    echo Use: volman [options]
     echo Options:
     # echo "  -b      Add bind mount"
     echo "  -d      Stop Volman (Compose down)"
@@ -90,11 +90,11 @@ if [ ! -z $down ]; then
 fi
 
 # Add volumes
-echo "volumes:" >> compose.yml
+# echo "volumes:" >> compose.yml
 
 footer="volumes:"
 for volume in $volumes; do
-    echo "      - $volume:/volumes/$volume" >> compose.yml
+    echo "      - $volume:/volman/volumes/$volume" >> compose.yml
     footer="$footer
       $volume:
         external: true" 
@@ -112,10 +112,23 @@ docker compose up -d
 
 # Enter volume management and list available volumes
 echo
-echo "Entering volman - to exit, type 'exit'"
+echo "Entering volman"
+
+echo
 echo Available volumes:
-docker exec -itu0 -w /volumes volman ls
-docker exec -itu0 -w /volumes volman /bin/$IMAGE_SHELL
+docker exec -itu0 -w /volman/volumes volman ls
+
+echo
+echo Available scripts:
+docker exec -itu0 -w /volman/scripts volman ls
+
+# docker exec -itu0 -w /volman volman ls *            # I want to list subdirectory contents, but * translates to my host machine files
+
+echo
+echo To exit, type 'exit'
+
+# Enter container
+docker exec -itu0 -w /volman volman /bin/$IMAGE_SHELL
 
 # Exit volman
 [ -z $keep ] && docker compose down
