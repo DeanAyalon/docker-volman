@@ -12,7 +12,11 @@ volumes=$(docker volume ls -q)
 # Loop through each volume and create a backup
 for source_volume in $volumes; do
   backup_date=$(date +"%Y%m%d_%H%M%S")
-  backup_file="${source_volume}_${backup_date}.tar.gz"
-  echo "Creating backup for volume: ${source_volume}, backup file: ${backup_file}"
-  docker run --tty --rm --interactive --volume ${source_volume}:/source --volume ${backup_dir}:/backup alpine tar czvf /backup/${backup_file} -C /source .
+  backup_file="${source_volume}_$backup_date.tar.gz"
+  echo Creating backup for volume: $source_volume, backup file: $backup_file
+
+  docker run --rm -it \
+  -v $source_volume:/source -v $backup_dir:/backup \
+  alpine \
+  tar czvf /backup/$backup_file -C /source .
 done
