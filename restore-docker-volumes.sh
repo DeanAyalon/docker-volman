@@ -1,7 +1,10 @@
 #!/bin/bash
 
 # Directory containing the backup files
-backup_dir="${PWD}/archive"
+backup_dir="$(dirname "$0")/archive"
+# PWD would give the working directory
+# If the user did `backup-restore-docker-volumes/restore-docker-bolumes.sh`
+    # the script would search for archive within the directory containing this repo
 
 # Check if the backup directory exists
 if [ ! -d "$backup_dir" ]; then
