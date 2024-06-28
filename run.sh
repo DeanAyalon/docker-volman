@@ -21,11 +21,11 @@ force_down() {
     docker network rm volman_default
 }
 
-# GET ALL DOCKER VOLUME NAMES -> $volumes
-docker_volumes() {
-    docker volume ls --format "{{.Name}}"
-}
-volumes=$(docker_volumes) || exit 1
+volumes=$(docker volume ls -q) || exit 1
+if [ -z "$volumes" ]; then
+    echo "No Docker volumes found."
+    exit 1
+fi
 
 # Calculate full path from argument (absolute/relative)
 # path() {
