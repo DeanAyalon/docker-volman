@@ -26,3 +26,8 @@ I may in the future customize this some more to allow:
 - Dynamic volume assignment ([docker-gen](https://github.com/nginx-proxy/docker-gen)?)
 
 But currently, this suits me just fine, all I need is to access the files within all my volumes
+
+# Git Remotes
+- Volman: `https://github.com/DeanAyalon/docker-volman`
+- Backups: `https://github.com/DeanAyalon/backup-restore-docker-volumes`
+- Backups/upstream: `https://github.com/rickarddahlstrand/backup-restore-docker-volumes`
