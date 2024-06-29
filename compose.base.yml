@@ -1,3 +1,4 @@
+name: volman
 services:
   manager:
     image: ${IMAGE:-alpine}

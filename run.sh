@@ -18,12 +18,13 @@ help() {
 
 force_down() {
     docker rm -f volman
-    docker network rm volman_default
+    # 
+    docker network rm ${project}_default
 }
 
 volumes=$(docker volume ls -q) || exit 1
 if [ -z "$volumes" ]; then
-    echo "No Docker volumes found."
+    echo No Docker volumes found.
     exit 1
 fi
 
@@ -56,7 +57,12 @@ if [ ! -f .env ]; then
     echo "  $volmandir/.env"
 fi
 source .env
+
 [ -z $IMAGE_SHELL ] && IMAGE_SHELL=sh
+
+# Compose project - if set in .env
+project=volman
+[ ! -z $COMPOSE_PROJECT_NAME ] && project=$COMPOSE_PROJECT_NAME
 
 # Options
 declare -a binds=()
@@ -68,6 +74,9 @@ while getopts "dDhk" opt; do
         #     bind="- $bindpath:/mounts/$(basename "$bindpath")"
         #     binds+=("$bind")
         #     ;;
+
+# Add options that would define override.env?
+
         d ) down=true ;;
         D ) down=force ;;
         h ) help; exit 2 ;;
@@ -90,8 +99,6 @@ if [ ! -z $down ]; then
 fi
 
 # Add volumes
-# echo "volumes:" >> compose.yml
-
 footer="volumes:"
 for volume in $volumes; do
     echo "      - $volume:/volman/volumes/$volume" >> compose.yml
