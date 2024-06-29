@@ -1,36 +1,39 @@
 #!/bin/bash
 
-# Directory containing the backup files
-backup_dir="$(dirname "$0")/archive"
-# PWD would give the working directory
-# If the user did `backup-restore-docker-volumes/restore-docker-bolumes.sh`
-    # the script would search for archive within the directory containing this repo
+# Execution context
+cd $(dirname "$0")
 
 # Check if the backup directory exists
-if [ ! -d "$backup_dir" ]; then
-  echo Backup directory not found: $backup_dir
-  exit 1
+if [ ! -d ./archive ]; then
+    echo Backup directory not found: $PWD/archive
+    exit 1
 fi
+cd archive
 
-# Loop through each backup file in the directory
-for backup_file in "$backup_dir"/*.tar.gz; do
-  # Extract the volume name from the backup file name
-  base_name=$(basename "$backup_file")
-  volume_name=$(echo $base_name | sed -E 's/(.+)_[0-9]{8}_[0-9]{6}\.tar\.gz/\1/')
-  
-  # Check if the volume already exists
-  if docker volume ls -q | grep -q "^${volume_name}$"; then
-    echo Volume $volume_name already exists. Skipping...
-  else
-    echo Restoring backup for volume: $volume_name, backup file: $backup_file
+# Check if Docker daemon is running and get volumes
+IFS=$'\n'
+volumes=($(docker volume ls -q)) || exit 1
+unset IFS
+
+# Loop through each volume backup directory in the archive
+for volume in *; do
+    # Check if the volume already exists
+    if [[ " ${volumes[@]} " =~ " ${volume} " ]]; then
+        echo Volume $volume already exists. Skipping...
+        continue
+        # TODO Prompt to overwrite
+    fi
+
+    # Get the latest backup
+    backup_file=$(ls -Art $volume | tail -n 1)
+    echo Restoring backup for volume: $volume, backup file: $backup_file
 
     # Create a new volume with the extracted volume name
-    docker volume create "${volume_name}"
+    docker volume create "$volume"
 
     # Restore the backup to the new volume
     docker run --rm -it \
-    -v ${volume_name}:/restore -v ${backup_dir}:/backup \
+    -v $volume:/restore -v ./$volume:/backup \
     alpine \
-    tar xzvf /backup/"${base_name}" -C /restore
-  fi
+    tar xzvf /backup/"$backup_file" -C /restore
 done
