@@ -1,9 +1,16 @@
 # Purpose
 This repository was made to generate a dynamic container with all the existing named volumes as mounts - To allow for easy data management.
 
-# Requirements
+# Install
+## Requirements
 - Docker
 - Docker Compose
+
+## Command Alias
+This tool is not yet available as a package, and so, it is currently most conveniently used with an alias in the user's RC files (`~/.zshrc`, `~/.bashrc`, etc.)
+```sh
+alias volman=path/to/this/repository/run.sh
+```
 
 # Use
 ## Run
