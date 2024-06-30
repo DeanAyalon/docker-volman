@@ -57,7 +57,7 @@ project=volman
 
 # Options
 declare -a binds=()
-while getopts "deDhk" opt; do
+while getopts "dDehk" opt; do
     case ${opt} in
         # b ) 
         #     echo $OPTARG
@@ -76,6 +76,7 @@ while getopts "deDhk" opt; do
         ? ) help; exit 1 ;;
     esac
 done
+shift "$((OPTIND-1))"
 
 # Generate compose file
 cp compose.base.yml compose.yml
