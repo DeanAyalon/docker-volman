@@ -1,10 +1,5 @@
 #!/bin/bash
 
-# Execution context
-workdir=$(pwd)
-cd "$(dirname "$0")"
-volmandir=$(pwd)
-
 # Help dialog
 help() {
     echo Use: volman [options]
@@ -12,43 +7,39 @@ help() {
     # echo "  -b      Add bind mount"
     echo "  -d      Stop Volman (Compose down)"
     echo "  -D      Forcefully stop Volman (rm -f)"
+    echo "  -e      Enter a running Volman container"
     echo "  -h      Show this Help dialog"
     echo "  -k      Keep Volman running after exit"
 }
 
+# Enter running volman
+enter_container() {
+    docker exec -itu0 -w /volman volman /bin/$IMAGE_SHELL
+}
+
+# Stop Volman
+take_down() {
+    echo "Taking Volman down, if this process takes too long, use 'volman -D' to force it to exit"
+    docker compose down
+}
 force_down() {
     docker rm -f volman
     # 
     docker network rm ${project}_default
 }
 
+# SCRIPT EXECUTION
+
+# Execution context
+cd "$(dirname "$0")"
+volmandir=$(pwd)
+
+# Get existing volumes
 volumes=$(docker volume ls -q) || exit 1
 if [ -z "$volumes" ]; then
     echo No Docker volumes found.
     exit 1
 fi
-
-# Calculate full path from argument (absolute/relative)
-# path() {
-#     local path
-#     # Empty argument
-#     if [ ! -n "$1" ]; then
-#         echo Empty path
-#         exit 1
-#     fi
-
-#     # Absolute/relative path
-#     if [[ "$1" == /* ]]; then
-#         path="$1"
-#     else
-#         path="$workdir/$1"
-#     fi
-
-#     # Create dir if path does not exist
-#     # [ ! -e "$path" ] && mkdir -p "$path"
-
-#     echo $path
-# }
 
 # Environment
 if [ ! -f .env ]; then
@@ -66,7 +57,7 @@ project=volman
 
 # Options
 declare -a binds=()
-while getopts "dDhk" opt; do
+while getopts "deDhk" opt; do
     case ${opt} in
         # b ) 
         #     echo $OPTARG
@@ -75,10 +66,11 @@ while getopts "dDhk" opt; do
         #     binds+=("$bind")
         #     ;;
 
-# Add options that would define override.env?
+        # Add options that would define override.env?
 
-        d ) down=true ;;
-        D ) down=force ;;
+        d ) take_down ; exit 0 ;;
+        e ) enter_container; exit 0 ;;
+        D ) force_down ; exit 0 ;;
         h ) help; exit 2 ;;
         k ) keep=true ;;
         ? ) help; exit 1 ;;
@@ -88,15 +80,15 @@ done
 # Generate compose file
 cp compose.base.yml compose.yml
 
-# Compose down
-if [ ! -z $down ]; then
-    if [ "$down" = force ]; then
-        force_down
-    else
-        docker compose down
-    fi
-    exit 0
-fi
+# Compose down - deprecated, now executed directly in while/case
+# if [ ! -z $down ]; then
+#     if [ "$down" = force ]; then
+#         force_down
+#     else
+#         docker compose down
+#     fi
+#     exit 0
+# fi
 
 # Add volumes
 footer="volumes:"
@@ -135,7 +127,12 @@ echo
 echo To exit, type 'exit'
 
 # Enter container
-docker exec -itu0 -w /volman volman /bin/$IMAGE_SHELL
+enter_container
 
 # Exit volman
-[ -z $keep ] && docker compose down
+if [ -z $keep ]; then
+    take_down
+else
+    echo "To take volman down, use 'volman -d'"
+    echo "To enter volman without recreating it, do 'volman -e'"
+fi
