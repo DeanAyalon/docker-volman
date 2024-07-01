@@ -16,8 +16,48 @@ help() {
     echo Consult $volmandir for further information
 }
 
+compose_volman() {
+    # Generate compose file
+    cp compose.base.yml compose.yml
+
+    # Add volumes
+    footer="volumes:"
+    for volume in $volumes; do
+        echo "      - $volume:/volman/volumes/$volume" >> compose.yml
+        footer="$footer
+          $volume:
+            external: true" 
+    done
+
+    # TODO Add bind mounts
+
+    # Define external volumes
+    echo "
+$footer" >> compose.yml
+
+    # Compose container
+    echo Generated compose file
+    docker compose up -d 
+    echo
+}
+
 # Enter running volman
 enter_container() {
+    # Check container
+    docker exec -itu0 volman pwd > /dev/null || exit 1
+
+    echo "Entering volman"
+
+    # List volumes and scripts
+    echo
+    echo Available volumes:
+    docker exec -itu0 -w /volman/volumes volman ls
+    echo
+    echo Available scripts:
+    docker exec -itu0 -w /volman/scripts volman ls
+    echo
+    echo To exit, type 'exit'
+
     docker exec -itu0 -w /volman volman /bin/$IMAGE_SHELL
 }
 
@@ -73,7 +113,7 @@ while getopts "dDehk" opt; do
         # Add options that would define override.env?
 
         d ) take_down ; exit 0 ;;
-        e ) enter_container; exit 0 ;;
+        e ) keep=true; generate=false ;;
         D ) force_down ; exit 0 ;;
         h ) help; exit 2 ;;
         k ) keep=true ;;
@@ -82,54 +122,7 @@ while getopts "dDehk" opt; do
 done
 shift "$((OPTIND-1))"
 
-# Generate compose file
-cp compose.base.yml compose.yml
-
-# Compose down - deprecated, now executed directly in while/case
-# if [ ! -z $down ]; then
-#     if [ "$down" = force ]; then
-#         force_down
-#     else
-#         docker compose down
-#     fi
-#     exit 0
-# fi
-
-# Add volumes
-footer="volumes:"
-for volume in $volumes; do
-    echo "      - $volume:/volman/volumes/$volume" >> compose.yml
-    footer="$footer
-      $volume:
-        external: true" 
-done
-
-# TODO Add bind mounts
-
-# Define external volumes
-echo "
-$footer" >> compose.yml
-
-# Compose container
-echo Generated compose file
-docker compose up -d 
-
-# Enter volume management and list available volumes
-echo
-echo "Entering volman"
-
-echo
-echo Available volumes:
-docker exec -itu0 -w /volman/volumes volman ls
-
-echo
-echo Available scripts:
-docker exec -itu0 -w /volman/scripts volman ls
-
-# docker exec -itu0 -w /volman volman ls *            # I want to list subdirectory contents, but * translates to my host machine files
-
-echo
-echo To exit, type 'exit'
+[[ $generate != "false" ]] && compose_volman
 
 # Enter container
 enter_container
