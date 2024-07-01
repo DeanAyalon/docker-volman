@@ -3,6 +3,8 @@
 # Help dialog
 help() {
     echo Use: volman [options]
+    echo Creates a container with all named volumes mounted to it, for easy management.
+    echo
     echo Options:
     # echo "  -b      Add bind mount"
     echo "  -d      Stop Volman (Compose down)"
@@ -10,6 +12,8 @@ help() {
     echo "  -e      Enter a running Volman container"
     echo "  -h      Show this Help dialog"
     echo "  -k      Keep Volman running after exit"
+    echo 
+    echo Consult $volmandir for further information
 }
 
 # Enter running volman
@@ -24,8 +28,8 @@ take_down() {
 }
 force_down() {
     docker rm -f volman
-    # 
-    docker network rm ${project}_default
+    # ONLY REMOVE THE NETWORK IF THE PROJECT IS EMPTY
+    # docker network rm ${project}_default
 }
 
 # SCRIPT EXECUTION
