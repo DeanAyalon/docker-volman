@@ -2,18 +2,19 @@
 
 # Help dialog
 help() {
-    echo Use: volman [options]
-    echo Creates a container with all named volumes mounted to it, for easy management.
-    echo
-    echo Options:
-    # echo "  -b      Add bind mount"
-    echo "  -d      Stop Volman (Compose down)"
-    echo "  -D      Forcefully stop Volman (rm -f)"
-    echo "  -e      Enter a running Volman container"
-    echo "  -h      Show this Help dialog"
-    echo "  -k      Keep Volman running after exit"
-    echo 
-    echo Consult $volmandir for further information
+cat << EOF
+    Use: run.sh [options]
+    Creates a container with all volumes mounted to it, for easy management.
+
+    Options:
+        -d      Stop Volman (compose down)
+        -D      Forcefully stop Volman (rm -f)
+        -e      Enter a running Volman container
+        -h      Show this Help dialog
+        -k      Keep Volman running after exit
+
+    Consult /Users/dean/Documents/code/dotfiles/tools/docker/volman for further information
+EOF
 }
 
 compose_volman() {
@@ -78,13 +79,6 @@ force_down() {
 cd "$(dirname "$0")"
 volmandir=$(pwd)
 
-# Get existing volumes
-volumes=$(docker volume ls -q) || exit 1
-if [ -z "$volumes" ]; then
-    echo No Docker volumes found.
-    exit 1
-fi
-
 # Environment
 if [ ! -f .env ]; then
     cp template.env .env
@@ -121,6 +115,13 @@ while getopts "dDehk" opt; do
     esac
 done
 shift "$((OPTIND-1))"
+
+# Get existing volumes
+volumes=$(docker volume ls -q) || exit 1
+if [ -z "$volumes" ]; then
+    echo No Docker volumes found.
+    exit 1
+fi
 
 [[ $generate != "false" ]] && compose_volman
 
