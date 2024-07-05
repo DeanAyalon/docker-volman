@@ -23,11 +23,11 @@ compose_volman() {
 
     # Add volumes
     footer="volumes:"
+    br=$'\n'
+    echo >> compose.yml
     for volume in $volumes; do
         echo "      - $volume:/volman/volumes/$volume" >> compose.yml
-        footer="$footer
-          $volume:
-            external: true" 
+        footer="$footer$br  $volume:$br    external: true" 
     done
 
     # TODO Add bind mounts
@@ -94,7 +94,7 @@ project=volman
 [ ! -z $COMPOSE_PROJECT_NAME ] && project=$COMPOSE_PROJECT_NAME
 
 # Options
-declare -a binds=()
+# declare -a binds=()
 while getopts "dDehk" opt; do
     case ${opt} in
         # b ) 

@@ -1,3 +1,5 @@
+#!/bin/sh
+
 # Only run within volman
 if [ $(hostname) != "volman" ]; then
     echo This script may only run within the Volman container
