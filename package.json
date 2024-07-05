@@ -1,0 +1,35 @@
+{
+    "name": "@deanayalon/docker-volman",
+    "version": "0.0.1",
+    "description": "Generate a dynamic container with all the existing named volumes as mounts - To allow for easy data management",
+    "author": {
+        "name": "Dean Ayalon",
+        "email": "dev@deanayalon.com",
+        "url": "https://deanayalon.com"
+    },
+    "keywords": [
+        "docker"
+    ],
+    "license": "ISC",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/DeanAyalon/docker-volman.git"
+    },
+    "publishConfig": {
+        "registry": "https://npm.pkg.github.com"
+    },
+    "bugs": {
+        "url": "https://github.com/DeanAyalon/docker-volman/issues"
+    },
+    "homepage": "https://github.com/DeanAyalon/docker-volman#readme",
+    
+    "main": "index.js",
+    "bin": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    
+    "devDependencies": {
+        "typescript": "^5.5.3"
+    }
+}

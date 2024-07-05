@@ -4,3 +4,7 @@ compose.yml
 # Environment files
 *.env
 !template.env
+
+# Node
+package-lock.json
+node_modules

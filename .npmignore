@@ -1,0 +1,6 @@
+# Shell scripts
+*.sh
+
+# Environment
+*.env
+!template.env
