@@ -1,6 +1,5 @@
-# Shell scripts
-*.sh
+# Old script
+old
 
-# Environment
-*.env
-!template.env
+# Dynamic compose file
+compose.yml
