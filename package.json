@@ -1,6 +1,6 @@
 {
     "name": "@deanayalon/docker-volman",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Generate a dynamic container with all the existing named volumes as mounts - To allow for easy data management",
     "author": {
         "name": "Dean Ayalon",
@@ -23,8 +23,8 @@
     },
     "homepage": "https://github.com/DeanAyalon/docker-volman#readme",
     
-    "main": "index.js",
-    "bin": "index.js",
+    "main": "index.ts",
+    "bin": "index.ts",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1"
     },
