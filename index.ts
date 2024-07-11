@@ -1,5 +1,7 @@
 #! npx ts-node
 
+import { compose } from './src/generate-compose'
+
 import { Command } from 'commander'
 const program = new Command()
 
@@ -10,23 +12,24 @@ program.name('docker-volman')
     .option('-v, --verbose', 'Log everything for debugging')
     .action(options => {
         let {keep, verbose} = options
+        // Verbose
         if (verbose) {
             console.log('Fetching available Docker volumes')
             console.log('Generating Compose file')
             console.log('Starting Volman')
         }
-        console.log('WIP - to be implemented')
-        console.log(options)
+        // Generate compose file
+        compose()
+        // Start Volman 
     })
     .addHelpText('afterAll', '\nGlobal Options:\n  -v, --verbose    Log everything for debugging')
 
 program.command('down').alias('stop')
     .description('Stop a running Volman container')
     .option('-f, --force', 'Force the Volman container down')
-    .option('-k, --keep', 'Stop container, but don\'t remove it')
+    .option('-k, --keep', 'Stop container, but don\'t remove it')   // Overridden by global option -k, get using program.opts()
     .action(options => {
         let {keep, verbose} = program.opts()
-        keep || ({keep} = options)
         let {force} = options
 
         console.log((force ? 'Forcing' : 'Taking') + ' Volman down')
