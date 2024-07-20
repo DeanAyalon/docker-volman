@@ -24,8 +24,8 @@ Use a `.env` file (See [template.env](./template.env)) to use a custom image and
 Use `run.sh -h` to list available command options
 
 # Featured Technologies
-[![Docker](https://img.shields.io/badge/docker-1D63ED.svg?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/repositories/deanayalon)
-![Shell](https://img.shields.io/badge/shell-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
+[![Docker](https://img.shields.io/badge/docker-1D63ED?style=for-the-badge&logo=docker&logoColor=white)](https://hub.docker.com/repositories/deanayalon)
+![Shell](https://img.shields.io/badge/shell-121011?style=for-the-badge&logo=gnu-bash&logoColor=white)
 
 
 # Future
