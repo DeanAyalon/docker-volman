@@ -1,6 +1,7 @@
 #!python3
 
 from typing import cast
+import subprocess
 
 import docker
 from docker.models.containers import Container
@@ -20,6 +21,11 @@ except Exception as e: print(e)
 
 # Start Volman
 try: volman = cast(Container, client.containers.run('ubuntu:22.04', ['tail', '-f', '/dev/null'], stderr = True, 
+                                                    stdin_open = True,
                                                     detach = True, volumes = mounts, name = 'volman', hostname = 'volman',
                                                     labels = { 'com.docker.compose.project': 'volman' }))
 except Exception as e: print(e); exit()
+
+# Enter Volman
+subprocess.Popen(['docker', 'exec', '-it', 'volman', '/bin/bash']).wait()
+# volman.exec_run('/bin/sh', stdin=True, tty=True)  # TODO implement with Docker Python SDK
