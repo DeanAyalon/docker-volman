@@ -9,10 +9,9 @@ from docker.models.containers import Container
 
 client = docker.from_env()
 
-image = os.environ.get('IMAGE')
-image = 'alpine' if image == None else image
-shell = os.environ.get('IMAGE_SHELL')
-shell = 'sh' if shell == None else shell
+# Environment variables (.env)
+image = os.environ.get('IMAGE') if 'IMAGE' in os.environ else 'alpine'
+shell = os.environ.get('IMAGE_SHELL') if 'IMAGE_SHELL' in os.environ else 'sh'
 
 # Define mounts by volume
 volumes = client.volumes.list()
