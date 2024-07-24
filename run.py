@@ -1,12 +1,18 @@
 #!python3
 
 from typing import cast
+import os
 import subprocess
 
 import docker
 from docker.models.containers import Container
 
 client = docker.from_env()
+
+image = os.environ.get('IMAGE')
+image = 'alpine' if image == None else image
+shell = os.environ.get('IMAGE_SHELL')
+shell = 'sh' if shell == None else shell
 
 # Define mounts by volume
 volumes = client.volumes.list()
@@ -20,7 +26,7 @@ try:
 except Exception as e: {}
 
 # Start Volman
-try: volman = cast(Container, client.containers.run('ubuntu:22.04', ['tail', '-f', '/dev/null'], stderr = True, 
+try: volman = cast(Container, client.containers.run(image, ['tail', '-f', '/dev/null'], stderr = True, 
                                                     detach = True, volumes = mounts, name = 'volman', hostname = 'volman',
                                                     labels = { 'com.docker.compose.project': 'volman' }))
 except Exception as e: print(e); exit()
@@ -34,7 +40,7 @@ for volume in volumes: print(volume.short_id)
 print('\nTo exit, type exit')
 
 # Enter Volman
-subprocess.Popen(['docker', 'exec', '-itw', '/volman', 'volman', '/bin/bash']).wait()
+subprocess.Popen(['docker', 'exec', '-itw', '/volman', 'volman', '/bin/' + shell]).wait()
 # volman.exec_run('/bin/sh', stdin=True, tty=True)  # TODO implement with Docker Python SDK
 
 # Remove Volman
