@@ -11,21 +11,24 @@ client = docker.from_env()
 # Define mounts by volume
 volumes = client.volumes.list()
 mounts = []
-for volume in volumes: mounts.append(volume.name + ':/volman/volumes/' + volume.name)
+for volume in volumes: mounts.append(volume.name + ':/volman/volumes/' + volume.short_id)
 
 # Stop volman if running
 try: 
     volman = client.containers.get('volman')
     volman.remove(force = True)
-except Exception as e: print(e)
+except Exception as e: {}
 
 # Start Volman
 try: volman = cast(Container, client.containers.run('ubuntu:22.04', ['tail', '-f', '/dev/null'], stderr = True, 
-                                                    stdin_open = True,
                                                     detach = True, volumes = mounts, name = 'volman', hostname = 'volman',
                                                     labels = { 'com.docker.compose.project': 'volman' }))
 except Exception as e: print(e); exit()
 
 # Enter Volman
+print('Entering Volman')
+print('Available volumes:')
+for volume in volumes: print(volume.short_id)
+
 subprocess.Popen(['docker', 'exec', '-it', 'volman', '/bin/bash']).wait()
 # volman.exec_run('/bin/sh', stdin=True, tty=True)  # TODO implement with Docker Python SDK
