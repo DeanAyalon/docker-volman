@@ -67,6 +67,9 @@ print('Available volumes:')
 for volume in volumes: print(volume.short_id)
 
 print('\nTo exit, type exit')
+if args.keep: 
+    print('Volman will not automatically stop on exit')
+    print('To stop volman, exit and run: `./run.py -d`')
 
 # Enter Volman
 enter()
