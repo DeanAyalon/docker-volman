@@ -1,0 +1,10 @@
+# docker compose run --rm volman [command]
+
+services:
+  volman:
+    image: deanayalon/volman:python
+    build: .
+    container_name: volman-controller
+    privileged: true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
