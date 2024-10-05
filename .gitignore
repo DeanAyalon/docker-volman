@@ -1,3 +1,6 @@
 # Environment
 *.env
 !template.env
+
+# Python
+.venv
