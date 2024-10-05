@@ -1,7 +1,6 @@
-# docker compose run --rm volman [command]
-
 services:
   volman:
+    # docker compose run --rm volman [command]
     image: deanayalon/volman:python
     build: .
     container_name: volman-controller
@@ -10,6 +9,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
 
   sandbox:
+    # docker compose run -i sandbox
     extends: volman
     entrypoint: bash
     container_name: volman-sandbox
