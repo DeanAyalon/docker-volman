@@ -37,8 +37,10 @@ parser.add_argument('-k', '--keep', help='Keep the container running after exiti
 args = parser.parse_args()
 
 # Environment variables (.env)
-image = args.image if args.image != None else os.environ.get('IMAGE') if 'IMAGE' in os.environ else 'alpine'
-shell = os.environ.get('IMAGE_SHELL') if 'IMAGE_SHELL' in os.environ else 'sh'
+image = args.image if args.image != None else os.environ.get('IMAGE')
+if not image: image = 'alpine'
+shell = os.environ.get('IMAGE_SHELL')
+if not shell: shell = 'sh'
 
 # -e/--enter: Enter Volman
 if args.enter: enter(); exit()
@@ -51,6 +53,7 @@ if args.down: stop(); exit()
 
 # Define mounts by volume
 volumes = client.volumes.list()
+if not len(volumes): exit('No volumes found')
 mounts = []
 for volume in volumes: mounts.append(volume.name + ':/volman/volumes/' + volume.short_id)
 

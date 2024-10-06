@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "volman"
-version = "0.1.0"
+version = "0.1.0-1"
 description = "Easy volume management for Docker"
 authors = ["Dean Ayalon <dev@deanayalon.com>"]
 license = "ISC"
