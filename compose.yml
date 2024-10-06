@@ -6,6 +6,10 @@ services:
       platforms:
         - linux/amd64
         - linux/arm64/v8
+      tags:
+        - deanayalon/volman:python${IMG_VER:+-}$IMG_VER
+        - ghcr.io/deanayalon/volman:python
+        - ghcr.io/deanayalon/volman:python${IMG_VER:+-}$IMG_VER
     container_name: volman-controller
     privileged: true
     volumes:
