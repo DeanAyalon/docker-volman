@@ -4,3 +4,8 @@
 
 # Python
 .venv
+dist
+**/__pycache__
+
+# MacOS
+.DS_Store
